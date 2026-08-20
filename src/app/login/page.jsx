@@ -2,9 +2,10 @@
 
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
-export default function LoginPage() {
+// ✅ Inner component that uses useSearchParams
+function LoginContent() {
   const { status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -114,5 +115,26 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+// ✅ Fallback shown while Suspense resolves (during prerender/CSR bailout)
+function LoginFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div
+        className="w-10 h-10 rounded-full border-4 border-t-transparent animate-spin"
+        style={{ borderColor: "var(--primary-main)", borderTopColor: "transparent" }}
+      />
+    </div>
+  );
+}
+
+// ✅ Default export wraps everything in Suspense
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginFallback />}>
+      <LoginContent />
+    </Suspense>
   );
 }

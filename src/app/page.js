@@ -85,33 +85,7 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Features Section */}
-      <div className="max-w-7xl mx-auto px-s24 py-s64">
-        <div className="text-center mb-s48">
-          <h2 className="heading-h2 text-main mb-s12">Our Services</h2>
-          <p className="body-large text-secondary">
-            Everything you need for your spiritual journey
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-s24">
-          <FeatureCard
-            icon="🕉️"
-            title="Book Pooja"
-            description="Book your favorite pooja with experienced and certified pandits. Choose from various pooja types for every occasion."
-          />
-          <FeatureCard
-            icon="💬"
-            title="Consult Experts"
-            description="Get expert advice on spiritual matters from our experienced consultants. Video calls and instant messaging available."
-          />
-          <FeatureCard
-            icon="📅"
-            title="Easy Scheduling"
-            description="Simple and convenient booking system. Choose your preferred time slot and let us handle the rest."
-          />
-        </div>
-      </div>
+   
 
       {/* CTA Section */}
       {!session && (
@@ -160,26 +134,3 @@ export default function HomePage() {
   );
 }
 
-function FeatureCard({ icon, title, description }) {
-  return (
-    <div
-      className="rounded-r16 p-s32 border transition-all hover:shadow-lg"
-      style={{
-        background: "white",
-        borderColor: "var(--secondary-dark)",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = "var(--primary-main)";
-        e.currentTarget.style.transform = "translateY(-4px)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = "var(--secondary-dark)";
-        e.currentTarget.style.transform = "translateY(0)";
-      }}
-    >
-      <div className="text-s56 mb-s16">{icon}</div>
-      <h3 className="heading-h5 text-main mb-s12">{title}</h3>
-      <p className="body-small text-secondary">{description}</p>
-    </div>
-  );
-}
