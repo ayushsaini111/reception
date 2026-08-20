@@ -1,69 +1,185 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+
+export default function HomePage() {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div
+          className="w-10 h-10 rounded-full border-4 border-t-transparent animate-spin"
+          style={{ borderColor: "var(--primary-main)", borderTopColor: "transparent" }}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.js
-            </code>{" "}
-            file.
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {/* Hero Section */}
+      <div
+        className="py-s80 px-s24"
+        style={{
+          background: "linear-gradient(135deg, var(--primary-main), var(--primary-light))",
+        }}
+      >
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="heading-h1 mb-s16" style={{ color: "white" }}>
+            Welcome to Rantraa
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+          <p className="body-large mb-s32" style={{ color: "rgba(255,255,255,0.9)" }}>
+            Book Pooja & Consult Spiritual Experts
+          </p>
+
+          {!session && (
+            <Link
+              href="/login"
+              className="inline-block px-s32 py-s16 body-default font-medium rounded-r16 transition-all"
+              style={{ background: "var(--accent-main)", color: "white" }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = "translateY(-2px)";
+                e.target.style.boxShadow = "0 8px 16px rgba(0,0,0,0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = "translateY(0)";
+                e.target.style.boxShadow = "none";
+              }}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              Sign In Now
+            </Link>
+          )}
+        </div>
+      </div>
+
+      {/* User Welcome Section */}
+      {session && (
+        <div className="max-w-7xl mx-auto px-s24 py-s64">
+          <div
+            className="rounded-r24 p-s40 border"
+            style={{
+              background: "white",
+              borderColor: "var(--secondary-dark)",
+            }}
+          >
+            <div className="flex flex-col items-center text-center gap-s24">
+              {session.user?.image && (
+                <img
+                  src={session.user.image}
+                  alt={session.user?.name}
+                  className="w-24 h-24 rounded-r16"
+                />
+              )}
+              <div>
+                <h2 className="heading-h2 text-main mb-s8">
+                  Welcome back, {session.user?.name?.split(" ")[0]}! 👋
+                </h2>
+                <p className="body-default text-secondary mb-s24">
+                  {session.user?.email}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Features Section */}
+      <div className="max-w-7xl mx-auto px-s24 py-s64">
+        <div className="text-center mb-s48">
+          <h2 className="heading-h2 text-main mb-s12">Our Services</h2>
+          <p className="body-large text-secondary">
+            Everything you need for your spiritual journey
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-s24">
+          <FeatureCard
+            icon="🕉️"
+            title="Book Pooja"
+            description="Book your favorite pooja with experienced and certified pandits. Choose from various pooja types for every occasion."
+          />
+          <FeatureCard
+            icon="💬"
+            title="Consult Experts"
+            description="Get expert advice on spiritual matters from our experienced consultants. Video calls and instant messaging available."
+          />
+          <FeatureCard
+            icon="📅"
+            title="Easy Scheduling"
+            description="Simple and convenient booking system. Choose your preferred time slot and let us handle the rest."
+          />
         </div>
-      </main>
+      </div>
+
+      {/* CTA Section */}
+      {!session && (
+        <div
+          className="py-s64 px-s24"
+          style={{ background: "var(--secondary-main)" }}
+        >
+          <div className="max-w-7xl mx-auto text-center">
+            <h2 className="heading-h2 text-main mb-s24">Ready to get started?</h2>
+            <Link
+              href="/login"
+              className="inline-block px-s40 py-s18 heading-h5 rounded-r16 transition-all"
+              style={{ background: "var(--primary-main)", color: "white" }}
+              onMouseEnter={(e) => (e.target.style.background = "var(--primary-light)")}
+              onMouseLeave={(e) => (e.target.style.background = "var(--primary-main)")}
+            >
+              Sign In with Google
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Footer */}
+      <footer
+        className="py-s32 px-s24 border-t"
+        style={{ borderColor: "var(--secondary-dark)" }}
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between flex-wrap gap-s16">
+            <div className="flex items-center gap-s12">
+              <div
+                className="w-8 h-8 rounded-r8 flex items-center justify-center"
+                style={{ background: "var(--primary-main)" }}
+              >
+                <span style={{ color: "white", fontWeight: "bold", fontSize: "0.875rem" }}>R</span>
+              </div>
+              <span className="heading-h6 text-main">Rantraa</span>
+            </div>
+            <p className="body-small text-secondary">
+              © 2024 Rantraa. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function FeatureCard({ icon, title, description }) {
+  return (
+    <div
+      className="rounded-r16 p-s32 border transition-all hover:shadow-lg"
+      style={{
+        background: "white",
+        borderColor: "var(--secondary-dark)",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = "var(--primary-main)";
+        e.currentTarget.style.transform = "translateY(-4px)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = "var(--secondary-dark)";
+        e.currentTarget.style.transform = "translateY(0)";
+      }}
+    >
+      <div className="text-s56 mb-s16">{icon}</div>
+      <h3 className="heading-h5 text-main mb-s12">{title}</h3>
+      <p className="body-small text-secondary">{description}</p>
     </div>
   );
 }

@@ -1,12 +1,8 @@
 import { Lora, DM_Sans } from "next/font/google";
-import Script from "next/script"; // ← Import Script
+import AuthProvider from "@/components/AuthProvider";
+import QueryProvider from "@/components/QueryProvider";
+import NavBar from "@/components/NavBar";
 import "./globals.css";
-
-import Navbar from "@/components/layout/Navbar";
-import MobileBottomBar from "@/components/layout/MobileBottomBar";
-import AuthProvider from "@/components/providers/SessionProvider";
-import AuthSync from "@/components/providers/AuthSync";
-import Footer from "@/components/footer/Footer";
 
 const Primary = Lora({
   variable: "--font-Lora-Serif",
@@ -21,27 +17,22 @@ const Secondary = DM_Sans({
 });
 
 export const metadata = {
-  title: "Rantraa",
-  description: "Book Pooja & Consult Experts",
+  title: "Rantraa - Book Pooja & Consult Experts",
+  description: "Book Pooja & Consult Spiritual Experts",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${Primary.variable} ${Secondary.variable} antialiased`}
-      >
-      
-     
-          <div className="min-h-screen bg-background">
-           
-
+      <body className={`${Primary.variable} ${Secondary.variable} antialiased`}>
+        <AuthProvider>
+          <QueryProvider>
+            <NavBar />
             <main className="pb-20 lg:pb-0">
               {children}
             </main>
-          
-          </div>
-        
+          </QueryProvider>
+        </AuthProvider>
       </body>
     </html>
   );
