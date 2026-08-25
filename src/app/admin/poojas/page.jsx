@@ -3,9 +3,10 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Plus, Pencil, Trash2, X, Search, Star, Image as ImageIcon,
-  Loader2, CheckCircle2, AlertCircle, Tag, IndianRupee,
+  Loader2, CheckCircle2, AlertCircle, Tag, IndianRupee,FileText,
   MessageSquareText, User,
 } from "lucide-react";
+import PoojaContentModal from "@/components/poojas/PoojaContentModal";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 const CATEGORIES = [
@@ -786,6 +787,7 @@ export default function PoojasManagementPage() {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [testimonialsPooja, setTestimonialsPooja] = useState(null);
   const [toast, setToast] = useState(null);
+  const [contentPooja, setContentPooja] = useState(null);
 
   const showToast = useCallback((message, type = "success") => setToast({ message, type }), []);
  useEffect(() => {
@@ -1010,26 +1012,33 @@ export default function PoojasManagementPage() {
                     </div>
                   )}
 
-                  <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-gray-100">
-                    <button
-                      onClick={() => handleOpenEdit(pooja)}
-                      className="flex items-center justify-center gap-1.5 px-2 py-2 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium hover:bg-blue-100 transition-colors"
-                    >
-                      <Pencil size={13} /> Edit
-                    </button>
-                    <button
-                      onClick={() => setTestimonialsPooja(pooja)}
-                      className="flex items-center justify-center gap-1.5 px-2 py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium hover:bg-amber-100 transition-colors"
-                    >
-                      <MessageSquareText size={13} /> Reviews
-                    </button>
-                    <button
-                      onClick={() => setDeleteTarget(pooja)}
-                      className="flex items-center justify-center gap-1.5 px-2 py-2 bg-red-50 text-red-700 rounded-lg text-xs font-medium hover:bg-red-100 transition-colors"
-                    >
-                      <Trash2 size={13} /> Delete
-                    </button>
-                  </div>
+                 {/* was: grid-cols-3 with 3 buttons — now grid-cols-2 with 4 buttons */}
+<div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-gray-100">
+  <button
+    onClick={() => handleOpenEdit(pooja)}
+    className="flex items-center justify-center gap-1.5 px-2 py-2 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium hover:bg-blue-100 transition-colors"
+  >
+    <Pencil size={13} /> Edit
+  </button>
+  <button
+    onClick={() => setContentPooja(pooja)}
+    className="flex items-center justify-center gap-1.5 px-2 py-2 bg-purple-50 text-purple-700 rounded-lg text-xs font-medium hover:bg-purple-100 transition-colors"
+  >
+    <FileText size={13} /> Content
+  </button>
+  <button
+    onClick={() => setTestimonialsPooja(pooja)}
+    className="flex items-center justify-center gap-1.5 px-2 py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium hover:bg-amber-100 transition-colors"
+  >
+    <MessageSquareText size={13} /> Reviews
+  </button>
+  <button
+    onClick={() => setDeleteTarget(pooja)}
+    className="flex items-center justify-center gap-1.5 px-2 py-2 bg-red-50 text-red-700 rounded-lg text-xs font-medium hover:bg-red-100 transition-colors"
+  >
+    <Trash2 size={13} /> Delete
+  </button>
+</div>
                 </div>
               </div>
             ))}
@@ -1059,6 +1068,13 @@ export default function PoojasManagementPage() {
           showToast={showToast}
         />
       )}
+      {contentPooja && (
+  <PoojaContentModal
+    pooja={contentPooja}
+    onClose={() => setContentPooja(null)}
+    showToast={showToast}
+  />
+)}
     </div>
   );
 }
