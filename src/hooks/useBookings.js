@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
+const BACKEND_URL = "/backend";
 
 export function useGetBookings(userId = null, type = "ALL", status = "ALL") {
   return useQuery({
@@ -15,7 +15,7 @@ export function useGetBookings(userId = null, type = "ALL", status = "ALL") {
       params.append("type", type);
       params.append("status", status);
 
-      const url = `${BACKEND_URL}/api/admins/bookings/get-all?${params.toString()}`;
+      const url = `${BACKEND_URL}/admins/bookings/get-all?${params.toString()}`;
       console.log("🔗 URL:", url);
 
       const res = await fetch(url);
@@ -43,7 +43,7 @@ export function useCreateBooking() {
     mutationFn: async (bookingData) => {
       console.log("📤 Creating booking...");
 
-      const res = await fetch(`${BACKEND_URL}/api/admins/bookings/create`, {
+      const res = await fetch(`${BACKEND_URL}/admins/bookings/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bookingData),
@@ -68,7 +68,7 @@ export function useUpdateBookingStatus() {
     mutationFn: async ({ bookingId, status, videoLink, certificateUrl }) => {
       console.log("🔄 Updating booking status...", { bookingId, status });
 
-      const res = await fetch(`${BACKEND_URL}/api/admins/bookings/update-status`, {
+      const res = await fetch(`${BACKEND_URL}/admins/bookings/update-status`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -95,7 +95,7 @@ export function useCreateReminders() {
     mutationFn: async (bookingId) => {
       console.log("📲 Creating reminders...", bookingId);
 
-      const res = await fetch(`${BACKEND_URL}/api/admins/bookings/create-reminders`, {
+      const res = await fetch(`${BACKEND_URL}/admins/bookings/create-reminders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bookingId }),
@@ -112,7 +112,7 @@ export function useCreateReminders() {
 export function useGenerateCertificate() {
   return useMutation({
     mutationFn: async (bookingId) => {
-      const res = await fetch(`${BACKEND_URL}/api/admins/bookings/generate-certificate`, {
+      const res = await fetch(`${BACKEND_URL}/bookings/generate-certificate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bookingId }),

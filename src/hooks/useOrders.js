@@ -3,8 +3,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
+const BACKEND_URL ="/backend";
 
 // ─── Get All Orders ────────────────────────────────────────────────
 export function useGetOrders({
@@ -27,7 +26,7 @@ export function useGetOrders({
       params.append("limit", limit);
 
       const res = await fetch(
-        `${BACKEND_URL}/api/admins/orders/get-all?${params.toString()}`
+        `${BACKEND_URL}/admins/orders/get-all?${params.toString()}`
       );
       if (!res.ok) throw new Error("Failed to fetch orders");
       return res.json();
@@ -43,7 +42,7 @@ export function useGetSingleOrder(orderId) {
     queryKey: ["order", orderId],
     queryFn: async () => {
       const res = await fetch(
-        `${BACKEND_URL}/api/admins/orders/get-single?orderId=${orderId}`
+        `${BACKEND_URL}/admins/orders/get-single?orderId=${orderId}`
       );
       if (!res.ok) throw new Error("Failed to fetch order");
       return res.json();
@@ -64,7 +63,7 @@ export function useUpdateOrderStatus() {
       paymentStatus,
       estimatedDelivery,
     }) => {
-      const res = await fetch(`${BACKEND_URL}/api/admins/orders/update-status`, {
+      const res = await fetch(`${BACKEND_URL}/admins/orders/update-status`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -92,7 +91,7 @@ export function useAssignDelivery() {
 
   return useMutation({
     mutationFn: async ({ orderId, partnerId }) => {
-      const res = await fetch(`${BACKEND_URL}/api/admins/orders/assign-delivery`, {
+      const res = await fetch(`${BACKEND_URL}/admins/orders/assign-delivery`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ orderId, partnerId }),
@@ -114,7 +113,7 @@ export function useGetDeliveryPartners() {
   return useQuery({
     queryKey: ["delivery-partners"],
     queryFn: async () => {
-      const res = await fetch(`${BACKEND_URL}/api/admins/orders/delivery-partners`);
+      const res = await fetch(`${BACKEND_URL}/admins/orders/delivery-partners`);
       if (!res.ok) throw new Error("Failed to fetch delivery partners");
       return res.json();
     },
@@ -127,7 +126,7 @@ export function useUpdateDeliveryPartner() {
 
   return useMutation({
     mutationFn: async (data) => {
-      const res = await fetch(`${BACKEND_URL}/api/admins/orders/delivery-partners/${data.id}`, {
+      const res = await fetch(`${BACKEND_URL}/admins/orders/delivery-partners/${data.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -148,7 +147,7 @@ export function useCreateDeliveryPartner() {
 
   return useMutation({
     mutationFn: async ({ name, phone, vehicleType, isAvailable = true }) => {
-      const res = await fetch(`${BACKEND_URL}/api/admins/orders/delivery-partners`, {
+      const res = await fetch(`${BACKEND_URL}/admins/orders/delivery-partners`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, phone, vehicleType, isAvailable }),
@@ -168,7 +167,7 @@ export function useRemoveDeliveryAssignment() {
 
   return useMutation({
     mutationFn: async ({ orderId, deliveryId }) => {
-      const res = await fetch(`${BACKEND_URL}/api/admins/orders/remove-delivery-assignment`, {
+      const res = await fetch(`${BACKEND_URL}/admins/orders/remove-delivery-assignment`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ orderId, deliveryId }),
@@ -188,7 +187,7 @@ export function useGetProducts() {
   return useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const res = await fetch(`${BACKEND_URL}/api/products`); // ✅ Fixed URL
+      const res = await fetch(`${BACKEND_URL}/products`); // ✅ Fixed URL
       if (!res.ok) throw new Error("Failed to fetch products");
       return res.json();
     },

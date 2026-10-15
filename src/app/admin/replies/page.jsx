@@ -2,15 +2,15 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
+const BACKEND_URL = "/backend";
 
 function useGetReplies(bookingId = null) {
   return useQuery({
     queryKey: ["whatsapp-replies", bookingId],
     queryFn: async () => {
       const url = bookingId
-        ? `${BACKEND_URL}/api/admins/whatsapp/replies?bookingId=${bookingId}`
-        : `${BACKEND_URL}/api/admins/whatsapp/replies`;
+        ? `${BACKEND_URL}/admins/whatsapp/replies?bookingId=${bookingId}`
+        : `${BACKEND_URL}/admins/whatsapp/replies`;
       const res = await fetch(url);
       if (!res.ok) throw new Error("Failed to fetch replies");
       return res.json();

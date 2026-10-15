@@ -3,8 +3,8 @@
 
 import { useState, useEffect } from "react";
 import { Calendar as CalendarIcon, Clock, X, Check, AlertCircle } from "lucide-react";
-// import { useSession } from "next-auth/react";
-// import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const TIME_SLOTS = [
   { value: "8-12", label: "Morning", time: "8:00 AM - 12:00 PM" },
@@ -27,8 +27,8 @@ function toLocalDateString(date) {
 }
 
 export default function CalendarManagementPage() {
-//   const { data: session, status } = useSession();
-//   const router = useRouter();
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   const currentDate = new Date();
   const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
@@ -39,11 +39,11 @@ export default function CalendarManagementPage() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
-//   useEffect(() => {
-//     if (status === "unauthenticated") {
-//       router.push("/login");
-//     }
-//   }, [status, router]);
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
 
   useEffect(() => {
     fetchAvailability();
