@@ -112,7 +112,7 @@ export function useCreateReminders() {
 export function useGenerateCertificate() {
   return useMutation({
     mutationFn: async (bookingId) => {
-      const res = await fetch(`${BACKEND_URL}/bookings/generate-certificate`, {
+      const res = await fetch(`${BACKEND_URL}/admins/bookings/generate-certificate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bookingId }),
