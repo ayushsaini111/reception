@@ -1,4 +1,4 @@
-// src/app/admin/calendar/page.jsx
+// src/app/admins/calendar/page.jsx
 "use client";
 
 import { useState, useEffect } from "react";
