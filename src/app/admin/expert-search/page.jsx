@@ -3,6 +3,38 @@
 import { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Phone, Mail, UserX } from "lucide-react";
+
+function UserCell({ user, userId }) {
+  if (!userId) {
+    return (
+      <span className="flex items-center gap-1.5 text-xs text-gray-400">
+        <UserX size={13} /> Not recorded
+      </span>
+    );
+  }
+  if (!user) {
+    return <span className="text-xs text-gray-400">User deleted ({userId.slice(0, 8)}...)</span>;
+  }
+  return (
+    <div className="space-y-0.5">
+      <p className="font-medium text-gray-800">{user.name || user.username || "Unnamed"}</p>
+      {user.phone && (
+        <a
+          href={`tel:${user.phone}`}
+          className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-purple-600"
+        >
+          <Phone size={12} /> {user.phone}
+        </a>
+      )}
+      {user.email && (
+        <p className="flex items-center gap-1.5 text-xs text-gray-500">
+          <Mail size={12} /> {user.email}
+        </p>
+      )}
+    </div>
+  );
+}
 
 export default function ExpertSearchAdminPage() {
   const { status } = useSession();
@@ -59,7 +91,7 @@ export default function ExpertSearchAdminPage() {
   return (
     <div className="p-6">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Unmatched Expert Searches</h1>
+        <h1 className="text-xl font-semibold">Expert Searches</h1>
         <select
           value={filter}
           onChange={(e) => { setFilter(e.target.value); setPage(1); }}
@@ -74,6 +106,7 @@ export default function ExpertSearchAdminPage() {
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase text-gray-500">
             <tr>
+              <th className="px-4 py-3">User</th>
               <th className="px-4 py-3">Category</th>
               <th className="px-4 py-3">Expertise</th>
               <th className="px-4 py-3">Description</th>
@@ -85,12 +118,15 @@ export default function ExpertSearchAdminPage() {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">Loading...</td></tr>
+              <tr><td colSpan={8} className="px-4 py-8 text-center text-gray-400">Loading...</td></tr>
             ) : data.requests?.length === 0 ? (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">No requests found</td></tr>
+              <tr><td colSpan={8} className="px-4 py-8 text-center text-gray-400">No requests found</td></tr>
             ) : (
               data.requests?.map((r) => (
-                <tr key={r.id} className="border-t border-gray-100">
+                <tr key={r.id} className="border-t border-gray-100 align-top">
+                  <td className="px-4 py-3">
+                    <UserCell user={r.user} userId={r.userId} />
+                  </td>
                   <td className="px-4 py-3">{r.problemCategory}</td>
                   <td className="px-4 py-3">{r.expertiseType}</td>
                   <td className="px-4 py-3 max-w-[240px] truncate" title={r.problemDescription || ""}>
@@ -101,8 +137,8 @@ export default function ExpertSearchAdminPage() {
                       {r.matchedCount}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-500">
-                    {new Date(r.createdAt).toLocaleDateString()}
+                  <td className="px-4 py-3 text-gray-500 whitespace-nowrap">
+                    {new Date(r.createdAt).toLocaleString()}
                   </td>
                   <td className="px-4 py-3">
                     {r.viewed ? (

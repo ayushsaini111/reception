@@ -8,7 +8,7 @@ export function useGetBookings(userId = null, type = "ALL", status = "ALL") {
   return useQuery({
     queryKey: ["bookings", userId, type, status],
     queryFn: async () => {
-      console.log("📡 Fetching bookings...", { userId, type, status });
+   
 
       const params = new URLSearchParams();
       if (userId) params.append("userId", userId);
@@ -16,18 +16,18 @@ export function useGetBookings(userId = null, type = "ALL", status = "ALL") {
       params.append("status", status);
 
       const url = `${BACKEND_URL}/admins/bookings/get-all?${params.toString()}`;
-      console.log("🔗 URL:", url);
+
 
       const res = await fetch(url);
 
       if (!res.ok) {
         const error = await res.text();
-        console.error("❌ Backend error:", error);
+       
         throw new Error(`Backend error: ${res.status}`);
       }
 
       const data = await res.json();
-      console.log("✅ Bookings received:", data.count, "bookings");
+ 
       return data;
     },
     refetchInterval: 5000,

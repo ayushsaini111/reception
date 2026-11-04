@@ -14,40 +14,54 @@ const COLUMN_CONFIG = [
   { id: "completed", label: "Completed", icon: "✅", color: "#16a34a", status: "COMPLETED" },
 ];
 
+const startOfDay = (d) => {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
+};
+
+// "YYYY-MM-DD" is parsed as a LOCAL date, so there is no UTC day shift
+function parseScheduled(value) {
+  if (!value) return null;
+  const s = String(value).trim();
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  const d = new Date(s);
+  return isNaN(d.getTime()) ? null : startOfDay(d);
+}
+
+const sameDay = (a, b) => !!a && !!b && a.getTime() === b.getTime();
+
 function filterByDate(bookings, dateFilter) {
   if (dateFilter === "all") return bookings;
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = startOfDay(new Date());
 
   return bookings.filter((b) => {
-    if (!b.scheduledDate) return false;
-    try {
-      const bookingDate = new Date(b.scheduledDate);
-      bookingDate.setHours(0, 0, 0, 0);
+    const scheduled = parseScheduled(b.scheduledDate);
+    const created = b.createdAt ? startOfDay(b.createdAt) : null;
 
-      switch (dateFilter) {
-        case "today":
-          return bookingDate.getTime() === today.getTime();
-        case "yesterday": {
-          const yesterday = new Date(today);
-          yesterday.setDate(yesterday.getDate() - 1);
-          return bookingDate.getTime() === yesterday.getTime();
-        }
-        case "week": {
-          const weekStart = new Date(today);
-          weekStart.setDate(weekStart.getDate() - today.getDay());
-          const weekEnd = new Date(weekStart);
-          weekEnd.setDate(weekEnd.getDate() + 6);
-          return bookingDate >= weekStart && bookingDate <= weekEnd;
-        }
-        case "year":
-          return bookingDate.getFullYear() === today.getFullYear();
-        default:
-          return true;
+    switch (dateFilter) {
+      case "today":
+        // pooja is today, OR the booking was made today
+        return sameDay(scheduled, today) || sameDay(created, today);
+      case "yesterday": {
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        return sameDay(scheduled, yesterday);
       }
-    } catch {
-      return false;
+      case "week": {
+        if (!scheduled) return false;
+        const weekStart = new Date(today);
+        weekStart.setDate(weekStart.getDate() - today.getDay());
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekEnd.getDate() + 6);
+        return scheduled >= weekStart && scheduled <= weekEnd;
+      }
+      case "year":
+        return !!scheduled && scheduled.getFullYear() === today.getFullYear();
+      default:
+        return true;
     }
   });
 }
